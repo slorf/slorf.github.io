@@ -1,1 +1,30 @@
 Hello World
+
+<!-- <script src="https://raw.githubusercontent.com/slorf/angular-breadcrumb/master/src/angular-breadcrumb.js"></script> -->
+
+<script>
+  function runXHR(url, successCb = () => {}, errorCb = () => {}) {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', successCb);
+    xhr.addEventListener('error', errorCb);
+    xhr.open("GET", url);
+    xhr.send();
+  }
+
+  const url = 'https://raw.githubusercontent.com/slorf/angular-breadcrumb/master/src/angular-breadcrumb.js';
+  const angular = { module: () => {} };
+  const urlLoaded = (e) => {
+    const xhr = e.target;
+    console.log(e);
+    console.log(xhr.response);
+
+    const js = xhr.response;
+    new Function(js)();
+  };
+
+  // runXHR(url, urlLoaded);
+
+
+</script>
+
+<script src="./alert.js"></script>
