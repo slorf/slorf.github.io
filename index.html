@@ -1,24 +1,25 @@
-Hello World
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Personal Projects</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<script>
-  function runXHR(url, successCb = () => {}, errorCb = () => {}) {
-    const xhr = new XMLHttpRequest();
-    xhr.addEventListener('load', successCb);
-    xhr.addEventListener('error', errorCb);
-    xhr.open("GET", url);
-    xhr.send();
-  }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <style>
+      body {
+        font-family: Roboto;
+      }
+    </style>
+  </head>
 
-  const url = 'https://raw.githubusercontent.com/slorf/angular-breadcrumb/master/src/angular-breadcrumb.js';
-  const angular = { module: () => {} };
-  const urlLoaded = (e) => {
-    const xhr = e.target;
-    console.log(e);
-    console.log(xhr.response);
-
-    const js = xhr.response;
-    new Function(js)();
-  };
-
-  // runXHR(url, urlLoaded);
-</script>
+  <body>
+    <h1>Projects</h1>
+    <ul>
+      <li>
+        <a href="./deckstats2moxfield/">Convert decklists from Deckstats.net to import in Moxfield.com</a>
+      </li>
+    </ul>
+  </body>
+</html>

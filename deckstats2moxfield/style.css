@@ -1,0 +1,34 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  padding: .5rem;
+  box-sizing: border-box;
+}
+
+body,
+textarea,
+button {
+  font-family: 'Roboto';
+}
+
+label,
+textarea {
+  display: block;
+  margin: .5rem 0;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+  align-items: center;
+}
+
+.copyToClipboard {
+  margin-left: auto;
+}

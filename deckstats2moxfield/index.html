@@ -1,0 +1,136 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Decklist converter: Deckstats to Moxfield</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <form>
+      <h1 for="deckstats">Deckstats Decklist</h1>
+      <textarea
+        id="deckstats"
+        placeholder="1 [SET#000] CardName #comment"
+        cols="50"
+        rows="20"
+        resizable="true"
+        wrap="off"
+      ></textarea>
+
+      <label>
+        <input type="checkbox" id="includeCommander" />
+        Include commander (only check this if you didn't select your commander yet when creating your deck in moxfield)
+      </label>
+      <button onclick="convertDecklist()">Convert</button>
+
+      <h1>Moxfield Decklist</h1>
+      <div class="flex">
+        <div>
+          <div class="flex">
+            <label>Main</label>
+            <button class="copyToClipboard" data-board="main">copy</button>
+          </div>
+          <textarea
+            readonly
+            id="moxfield-main"
+            placeholder="1 CardName (set) 000 *F* #tags"
+            cols="50"
+            rows="20"
+            resizable="true"
+            wrap="off"
+          ></textarea>
+        </div>
+        <div>
+          <div class="flex">
+            <label>Sideboard</label>
+            <button class="copyToClipboard" data-board="main">copy</button>
+          </div>
+          <textarea
+            readonly
+            id="moxfield-side"
+            placeholder="1 CardName (set) 000 *F* #tags"
+            cols="50"
+            rows="20"
+            resizable="true"
+            wrap="off"
+          ></textarea>
+        </div>
+        <div>
+          <div class="flex">
+            <label>Considering</label>
+            <button class="copyToClipboard" data-board="main">copy</button>
+          </div>
+          <textarea
+            readonly
+            id="moxfield-maybe"
+            placeholder="1 CardName (set) 000 *F* #tags"
+            cols="50"
+            rows="20"
+            resizable="true"
+            wrap="off"
+          ></textarea>
+        </div>
+      </div>
+    </form>
+
+    <script src="./deckstats2moxfield.js"></script>
+    <script>
+      const $form = document.querySelector('form');
+      $form.addEventListener('submit', (e) => e.preventDefault());
+
+      function convertDecklist() {
+        const $deckstatsArea = document.getElementById('deckstats');
+        const decklist = $deckstatsArea.value;
+        const $includeCommander = document.getElementById('includeCommander');
+        const options = {
+          addCommander: $includeCommander.checked,
+        };
+
+        const moxfield = convertDeckstatsToMoxfield(decklist, options);
+
+        const mainboard = [];
+        const sideboard = [];
+        const maybeboard = [];
+
+        let board = mainboard;
+        const boardIndexes = moxfield.forEach(line => {
+          if (line === 'SIDEBOARD') {
+            board = sideboard;
+            return;
+          }
+          if (line === 'MAYBEBOARD') {
+            board = maybeboard;
+            return;
+          }
+
+          board.push(line);
+        });
+
+        function addToBoard(boardName, board) {
+          const $moxfieldArea = document.getElementById(`moxfield-${boardName}`);
+          $moxfieldArea.value = board.join('\n');
+        }
+
+        addToBoard('main', mainboard);
+        addToBoard('side', sideboard);
+        addToBoard('maybe', maybeboard);
+      }
+
+      const $copyButtons = document.querySelectorAll('.copyToClipboard');
+      $copyButtons.forEach($button => {
+        if (!navigator.clipboard) {
+          $button.style.display = 'none';
+          return;
+        }
+
+        const $source = document.getElementById(`moxfield-${$button.dataset.board}`);
+        navigator.clipboard.writeText($source.value);
+      });
+
+    </script>
+  </body>
+</html>
