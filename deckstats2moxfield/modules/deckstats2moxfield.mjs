@@ -75,3 +75,7 @@ function convertDeckstatsToMoxfield(decklist, config = {}) {
 
   return moxfield;
 }
+
+export {
+  convertDeckstatsToMoxfield,
+};

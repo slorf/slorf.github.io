@@ -9,11 +9,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <link rel="stylesheet" href="./style.css">
   </head>
+
   <body>
-    <form>
-      <h1 for="deckstats">Deckstats Decklist</h1>
+    <form id="deckstats">
+      <h1 for="deckstats-decklist">Deckstats Decklist</h1>
       <textarea
-        id="deckstats"
+        id="deckstats-decklist"
         placeholder="1 [SET#000] CardName #comment"
         cols="50"
         rows="20"
@@ -25,8 +26,10 @@
         <input type="checkbox" id="includeCommander" />
         Include commander (only check this if you didn't select your commander yet when creating your deck in moxfield)
       </label>
-      <button onclick="convertDecklist()">Convert</button>
+      <button>Convert</button>
+    </form>
 
+    <form id="moxfield">
       <h1>Moxfield Decklist</h1>
       <div class="flex">
         <div>
@@ -47,7 +50,7 @@
         <div>
           <div class="flex">
             <label>Sideboard</label>
-            <button class="copyToClipboard" data-board="main">copy</button>
+            <button class="copyToClipboard" data-board="side">copy</button>
           </div>
           <textarea
             readonly
@@ -62,7 +65,7 @@
         <div>
           <div class="flex">
             <label>Considering</label>
-            <button class="copyToClipboard" data-board="main">copy</button>
+            <button class="copyToClipboard" data-board="maybe">copy</button>
           </div>
           <textarea
             readonly
@@ -77,60 +80,6 @@
       </div>
     </form>
 
-    <script src="./deckstats2moxfield.js"></script>
-    <script>
-      const $form = document.querySelector('form');
-      $form.addEventListener('submit', (e) => e.preventDefault());
-
-      function convertDecklist() {
-        const $deckstatsArea = document.getElementById('deckstats');
-        const decklist = $deckstatsArea.value;
-        const $includeCommander = document.getElementById('includeCommander');
-        const options = {
-          addCommander: $includeCommander.checked,
-        };
-
-        const moxfield = convertDeckstatsToMoxfield(decklist, options);
-
-        const mainboard = [];
-        const sideboard = [];
-        const maybeboard = [];
-
-        let board = mainboard;
-        const boardIndexes = moxfield.forEach(line => {
-          if (line === 'SIDEBOARD') {
-            board = sideboard;
-            return;
-          }
-          if (line === 'MAYBEBOARD') {
-            board = maybeboard;
-            return;
-          }
-
-          board.push(line);
-        });
-
-        function addToBoard(boardName, board) {
-          const $moxfieldArea = document.getElementById(`moxfield-${boardName}`);
-          $moxfieldArea.value = board.join('\n');
-        }
-
-        addToBoard('main', mainboard);
-        addToBoard('side', sideboard);
-        addToBoard('maybe', maybeboard);
-      }
-
-      const $copyButtons = document.querySelectorAll('.copyToClipboard');
-      $copyButtons.forEach($button => {
-        if (!navigator.clipboard) {
-          $button.style.display = 'none';
-          return;
-        }
-
-        const $source = document.getElementById(`moxfield-${$button.dataset.board}`);
-        navigator.clipboard.writeText($source.value);
-      });
-
-    </script>
+    <script type="module" src="main.js"></script>
   </body>
 </html>
